@@ -9,7 +9,7 @@ no worker auto clean
 
 ## install 
 
-    apt-get install cpanminus 
+    apt-get install cpanminus ansible
     cpanm SimpleDBI
 
     perl circle_task.pl
