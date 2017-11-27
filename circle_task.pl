@@ -15,13 +15,13 @@ my $db = SimpleDBI->new(
     port => 3306, 
 );
 
+my $task_name = 'ip_loc';
 my $task_table = 'ip_loc_task';
+my $worker_table = 'task_worker';
 
-my @worker = qw/ 
-work1.xxx.com
-/;
+my $worker_list = get_worker_list($db, $worker_table, $task_name);
 
-for my $w (@worker){
+for my $w (@$worker_list){
     print "check worker $w\n";
     main_task($db, $task_table, $w, 'ask_ip_loc.pl', \&remote_action);
 }
@@ -30,6 +30,17 @@ sub remote_action {
     my ($worker, $task) = @_;
     print "worker $worker, task $task\n";
     system(qq[ansible $worker -m shell -a 'cd /root/ask_ip_loc ; nohup perl ask_ip_loc.pl $task &']);
+}
+
+#---------
+
+sub get_worker_list {
+    my ($db, $worker_table, $task_name) = @_;
+    my $worker_list = $db->query_db(qq[select worker from $worker_table where task='$task_name'],
+        result_type => 'arrayref',
+    );
+    $_ = $_->[0] for @$worker_list;
+    return $worker_list;
 }
 
 sub main_task {

@@ -34,3 +34,24 @@ no worker auto clean
     +---------------------+------+--------+
     1 row in set (0.00 sec)
 
+
+    MariaDB [dns]> desc task_worker;
+    +--------+-------------+------+-----+-------------------+-----------------------------+
+    | Field  | Type        | Null | Key | Default           | Extra                       |
+    +--------+-------------+------+-----+-------------------+-----------------------------+
+    | time   | timestamp   | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+    | task   | varchar(20) | YES  |     | NULL              |                             |
+    | worker | varchar(50) | YES  |     | NULL              |                             |
+    +--------+-------------+------+-----+-------------------+-----------------------------+
+    3 rows in set (0.00 sec)
+
+
+    MariaDB [dns]> select * from task_worker where task='ip_loc';
+    +---------------------+--------+-------------------+
+    | time                | task   | worker            |
+    +---------------------+--------+-------------------+
+    | 2017-11-27 12:17:18 | ip_loc | task2.xxxxxx.com  |
+    | 2017-11-27 12:17:36 | ip_loc | task.xxxxxx.com   |
+    +---------------------+--------+-------------------+
+    2 rows in set (0.00 sec)
+
